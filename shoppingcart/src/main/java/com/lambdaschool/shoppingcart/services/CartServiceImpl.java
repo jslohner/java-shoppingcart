@@ -90,7 +90,7 @@ public class CartServiceImpl
 		Product updateProduct = productrepos.findById(product.getProductid())
 									.orElseThrow(() -> new ResourceNotFoundException("Product id " + product.getProductid() + " not found"));
 
-		if (helper.isAuthorizedToMakeChange(userAuditing.getCurrentAuditor().get())) {
+		if (helper.isAuthorizedToMakeChange(updateCart.getUser().getUsername())) {
 			if (cartrepos.checkCartItems(updateCart.getCartid(), updateProduct.getProductid())
 					.getCount() > 0) {
 				cartrepos.updateCartItemsQuantity(userAuditing.getCurrentAuditor()
@@ -115,7 +115,7 @@ public class CartServiceImpl
 		Product updateProduct = productrepos.findById(product.getProductid())
 									.orElseThrow(() -> new ResourceNotFoundException("Product id " + product.getProductid() + " not found"));
 
-		if (helper.isAuthorizedToMakeChange(userAuditing.getCurrentAuditor().get())) {
+		if (helper.isAuthorizedToMakeChange(updateCart.getUser().getUsername())) {
 			if (cartrepos.checkCartItems(updateCart.getCartid(), updateProduct.getProductid())
 					.getCount() > 0) {
 				cartrepos.updateCartItemsQuantity(userAuditing.getCurrentAuditor()

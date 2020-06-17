@@ -1,7 +1,5 @@
 package com.lambdaschool.shoppingcart.controllers;
 
-import com.lambdaschool.shoppingcart.exceptions.ResourceNotFoundException;
-import com.lambdaschool.shoppingcart.handlers.HelperFunctions;
 import com.lambdaschool.shoppingcart.models.Cart;
 import com.lambdaschool.shoppingcart.models.Product;
 import com.lambdaschool.shoppingcart.models.User;
@@ -27,9 +25,6 @@ public class CartController {
 
 	@Autowired
 	private UserAuditing userAuditing;
-
-	@Autowired
-	private HelperFunctions helper;
 
 	@GetMapping(value = "/user", produces = {"application/json"})
 	public ResponseEntity<?> listAllCarts() {
@@ -69,12 +64,8 @@ public class CartController {
 		Product dataProduct = new Product();
 		dataProduct.setProductid(productid);
 
-		if (helper.isAuthorizedToMakeChange(userAuditing.getCurrentAuditor().get())) {
-			cartService.save(dataCart, dataProduct);
-			return new ResponseEntity<>(HttpStatus.OK);
-		} else {
-			throw new ResourceNotFoundException("This user is not authorized to make change");
-		}
+		cartService.save(dataCart, dataProduct);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/delete/cart/{cartid}/product/{productid}")
