@@ -26,8 +26,8 @@ public class UserServiceImpl
 	@Autowired
 	private CartService cartService;
 
-	// @Autowired
-	// private RoleSer
+	@Autowired
+	private RoleService roleService;
 
 	@Override
 	public List<User> findAll() {
@@ -70,7 +70,7 @@ public class UserServiceImpl
 	public User save(User user) {
 		User newUser = new User();
 
-		newUser.setUsername(user.getUsername());
+		newUser.setUsername(user.getUsername().toLowerCase());
 		newUser.setPasswordNoEncrypt(user.getPassword());
 		newUser.setComments(user.getComments());
 
@@ -81,7 +81,9 @@ public class UserServiceImpl
 
 		if (user.getUserid() == 0) {
 			for (UserRoles ur : user.getRoles()) {
-				Role newRole = roleService
+				Role newRole = roleService.findRoleById(ur.getRole().getRoleid());
+
+				newUser.addRole(newRole);
 			}
 		}
 

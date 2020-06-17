@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +20,12 @@ public class User
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long userid;
 
+	@NotNull
 	@Column(nullable = false,
 		unique = true)
 	private String username;
 
+	@NotNull
 	@Column(nullable = false)
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
@@ -107,6 +110,10 @@ public class User
 
 	public void setRoles(List<UserRoles> roles) {
 		this.roles = roles;
+	}
+
+	public void addRole(Role role) {
+		roles.add(new UserRoles(this, role));
 	}
 
 	@JsonIgnore
