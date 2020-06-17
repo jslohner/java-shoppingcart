@@ -1,6 +1,7 @@
 package com.lambdaschool.shoppingcart.controllers;
 
 import com.lambdaschool.shoppingcart.models.User;
+import com.lambdaschool.shoppingcart.services.UserAuditing;
 import com.lambdaschool.shoppingcart.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +21,9 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private UserAuditing userAuditing;
+
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping(value = "/users", produces = {"application/json"})
 	public ResponseEntity<?> listAllUsers() {
@@ -38,7 +42,12 @@ public class UserController {
 			HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@GetMapping(value = "/myinfo", produces = {"application/json"})
+	public ResponseEntity<?> getUserInfo() {
+		User u = userService.findByName(userAuditing.getCurrentAuditor().get());
+		return new ResponseEntity<>(u, HttpStatus.OK);
+	}
+
 	@PostMapping(value = "/user", consumes = {"application/json"})
 	public ResponseEntity<?> addUser(@Valid @RequestBody User newuser) {
 		newuser.setUserid(0);
@@ -57,7 +66,6 @@ public class UserController {
 			HttpStatus.CREATED);
 	}
 
-	@PreAuthorize("hasAnyRole('ADMIN')")
 	@DeleteMapping(value = "/user/{userId}")
 	public ResponseEntity<?> deleteUserById(
 		@PathVariable

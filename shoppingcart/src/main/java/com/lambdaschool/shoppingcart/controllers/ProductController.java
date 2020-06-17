@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -19,12 +20,14 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping(value = "/products", produces = {"application/json"})
 	public ResponseEntity<?> listAllProducts() {
 		List<Product> myProducts = productService.findAll();
 		return new ResponseEntity<>(myProducts, HttpStatus.OK);
 	}
 
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping(value = "/product/{productId}",
 		produces = {"application/json"})
 	public ResponseEntity<?> getProductById(
@@ -35,6 +38,7 @@ public class ProductController {
 			HttpStatus.OK);
 	}
 
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@PostMapping(value = "/product")
 	public ResponseEntity<?> addProduct(@Valid @RequestBody Product newproduct) {
 		newproduct.setProductid(0);
@@ -53,6 +57,7 @@ public class ProductController {
 			HttpStatus.CREATED);
 	}
 
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@PutMapping(value = "/product/{productid}")
 	public ResponseEntity<?> updateProductById(
 		@RequestBody Product updateProduct,
@@ -61,6 +66,7 @@ public class ProductController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@DeleteMapping(value = "/product/{productid}")
 	public ResponseEntity<?> getProductById(
 		@PathVariable long productid) {
